@@ -19,23 +19,37 @@ io.on('connection', (socket) => {
         text: 'hey wassup',
         createAt: 123
     }); */
-    
-   /*  socket.emit('newMessage',{
-        from: 'john',
-        text: 'see you then',
+    socket.emit('newMessage',{
+        from: 'admin',
+        text: 'welcome to the app',
         createAt: 123123
-    }); */
+        });
+        
+        socket.broadcast.emit('newMessage',{
+            from: 'admin',
+            text: 'new user joined',
+            createAt: 123123
+            });
+   
 
     socket.on('createMessage',(message)=>{
 
         console.log('createMessage',message);
 
-        io.emit('newMessage',{
+        
+
+       /*  io.emit('newMessage',{
             from: message.from,
             text: message.text,
             createdAt: new Date().getTime()
 
-        } );
+        } ); */
+
+        /* socket.broadcast.emit('newMessage',{
+            from:message.from,
+            text:message.text,
+            createdAt: new Date().getTime()
+        }); */
 
     });
 
