@@ -3,6 +3,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
 
+const {generateMessage} = require('./utils/message');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 var app = express();
@@ -12,44 +13,18 @@ var io = socketIO(server);
 app.use(express.static(publicPath));
 //io.on listens to connection from client.
 io.on('connection', (socket) => {
-    console.log('new user connection');
-
-    /* socket.emit('newEmail', {
-        from: 'naren@gmail.com',
-        text: 'hey wassup',
-        createAt: 123
-    }); */
-    socket.emit('newMessage',{
-        from: 'admin',
-        text: 'welcome to the app',
-        createAt: 123123
-        });
+    console.log('new user connection');   
+   
+    socket.emit('newMessage',generateMessage('Admin','Welcome to the app'));
         
-        socket.broadcast.emit('newMessage',{
-            from: 'admin',
-            text: 'new user joined',
-            createAt: 123123
-            });
+        socket.broadcast.emit('newMessage',generateMessage('Admin','new user joined the app'));
    
 
-    socket.on('createMessage',(message)=>{
+    socket.on('createMessage',(message,callback)=>{
 
         console.log('createMessage',message);
-
-        
-
-       /*  io.emit('newMessage',{
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().getTime()
-
-        } ); */
-
-        /* socket.broadcast.emit('newMessage',{
-            from:message.from,
-            text:message.text,
-            createdAt: new Date().getTime()
-        }); */
+        io.emit('newMessage',generateMessage(message.from,message.text) );
+        callback('This is from the server');
 
     });
 
